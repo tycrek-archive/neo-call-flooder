@@ -1,0 +1,23 @@
+{
+  "name": "neo-call-flooder",
+  "version": "1.0.0",
+  "description": "Spam call phone numbers (FOR EDUCATIONAL PURPOSES ONLY)",
+  "main": "flood.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tycrek/neo-call-flooder.git"
+  },
+  "author": "tycrek",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/tycrek/neo-call-flooder/issues"
+  },
+  "homepage": "https://github.com/tycrek/neo-call-flooder#readme",
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "twilio": "^3.49.4"
+  }
+}
