@@ -3,7 +3,7 @@ require('dotenv').config()
 const client = new require('twilio')(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
 
 // Set this to 0 for infinite
-const max = 0;
+const max = process.env.MAX_CALLS || 0;
 
 // Don't change this
 let count = 1;
